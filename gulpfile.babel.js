@@ -13,6 +13,7 @@ import del from 'del';
 import eslint from 'gulp-eslint';
 import webpack from 'webpack-stream';
 import mocha from 'gulp-mocha';
+import flow from 'gulp-flowtype';
 
 import webpackConfig from './webpack.config.babel';
 
@@ -66,4 +67,16 @@ gulp.task('lint', () =>
 gulp.task('test', ['build'], () =>
   gulp.src(paths.allLibTests)
     .pipe(mocha())
+);
+
+gulp.task('lint', () =>
+  gulp.src([
+    paths.allSrcJs,
+    paths.gulpFile,
+    paths.webpackFile,
+  ])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .pipe(flow({ abort: true })) // Add Flow here
 );
